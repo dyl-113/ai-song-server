@@ -1,0 +1,24 @@
+services:
+  # 主Web服务
+  - type: web
+    name: ai-song-server
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ai-song-db
+          property: connectionString
+    healthCheckPath: /
+    autoDeploy: true
+
+databases:
+  # 数据库服务
+  - name: ai-song-db
+    plan: free
+    databaseName: ai_song
+    user: ai_song_user
